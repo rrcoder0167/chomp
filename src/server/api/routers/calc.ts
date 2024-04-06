@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-  createTRPCRouter,
-  protectedProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 // f = fasting
 // a = after eating
@@ -40,13 +37,9 @@ export function rankBloodSugar(
     case bloodSugar >= 230 && bloodSugar <= 300 && mode === "a":
       return "diabetic";
 
-    case bloodSugar >= 120 &&
-      bloodSugar < 140 &&
-      mode === "a2+":
+    case bloodSugar >= 120 && bloodSugar < 140 && mode === "a2+":
       return "healthy";
-    case bloodSugar >= 140 &&
-      bloodSugar < 160 &&
-      mode === "a2+":
+    case bloodSugar >= 140 && bloodSugar < 160 && mode === "a2+":
       return "pre-diabetic";
     case bloodSugar >= 160 && mode === "a2+":
       return "diabetic";
@@ -57,15 +50,21 @@ export const calcRouter = createTRPCRouter({
   bmi: protectedProcedure
     .input(z.object({ height: z.number().int(), weight: z.number().int() }))
     .query(({ input }) => {
-        if (input.weight <= 0 || input.height <= 0) {
-            throw "Bad weight/height"
-        }
-        return getBMI(input.weight, input.height);
+      if (input.weight <= 0 || input.height <= 0) {
+        throw "Bad weight/height";
+      }
+      return getBMI(input.weight, input.height);
     }),
   bloodsugar: protectedProcedure
-    .input(z.object({ units: z.number().int(), sugar: z.number().int(), mode: z.string() }))
+    .input(
+      z.object({
+        units: z.number().int(),
+        sugar: z.number().int(),
+        mode: z.string(),
+      }),
+    )
     .query(({ input }) => {
-        // @ts-ignore
-        return rankBloodSugar(input.mode, input.sugar, input.units);
+      // @ts-ignore
+      return rankBloodSugar(input.mode, input.sugar, input.units);
     }),
 });
