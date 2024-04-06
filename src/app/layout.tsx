@@ -3,6 +3,15 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "~/components/ui/navigation-menu"
+import Image from "next/image"
+import Link from "next/link"
+import { getServerAuthSession } from "~/server/auth";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,15 +24,25 @@ export const metadata = {
   icons: [{ url: "/logo.png" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerAuthSession();
+
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider>
+          <NavigationMenu className="space-x-4 p-2">
+            <NavigationMenuLink><Image src="/logo.png" alt="Pacman" width="25" height="25"/></NavigationMenuLink>
+            <NavigationMenuList className="float-end">
+              <Link className="hover:text-primary transition-all duration-100" href={session ? "/api/auth/signout" : "/api/auth/signin"}><NavigationMenuItem>
+                  {session ? "Sign Out" : "Sign In"}
+              </NavigationMenuItem></Link>
+            </NavigationMenuList>
+          </NavigationMenu>
           {children}
         </TRPCReactProvider>
       </body>
