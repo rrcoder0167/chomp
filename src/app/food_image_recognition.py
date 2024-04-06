@@ -3,6 +3,11 @@ from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import numpy as np
+
+model = tf.keras.models.load_model('/Users/riddhiman.rana/Desktop/Coding/chomp/food_101_model.h5')
+
+class_names = ['Coke', 'Doritos', 'Oranges', 'Oreos', 'Seven Up', 'Sprite']  # Define your class names
 
 # Function to predict food from an image
 def predict_food(image_path):
@@ -12,8 +17,10 @@ def predict_food(image_path):
 
     predictions = model.predict(img_array)
     score = tf.nn.softmax(predictions[0])
-
+    print(predictions)
     print(
         "This image most likely belongs to {} with a {:.2f} percent confidence."
         .format(class_names[np.argmax(score)], 100 * np.max(score))
     )
+    
+predict_food('/Users/riddhiman.rana/Desktop/Coding/chomp/public/images/seven_up.jpeg')
