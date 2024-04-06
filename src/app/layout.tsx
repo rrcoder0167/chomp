@@ -37,7 +37,22 @@ export default async function RootLayout({
         <TRPCReactProvider>
           <NavigationMenu className="space-x-4 p-2">
             <NavigationMenuLink><Image src="/logo.png" alt="Pacman" width="25" height="25"/></NavigationMenuLink>
-            <NavigationMenuList className="float-end">
+            <NavigationMenuList>
+              <Link className="hover:text-primary transition-all duration-100" href="/home/bmi"><NavigationMenuItem>
+                  BMI Calculator
+              </NavigationMenuItem></Link>
+            </NavigationMenuList>
+            <NavigationMenuList>
+              <Link className="hover:text-primary transition-all duration-100" href="/home/sugar"><NavigationMenuItem>
+                  Blood Sugar
+              </NavigationMenuItem></Link>
+            </NavigationMenuList>
+            <NavigationMenuList>
+              <Link className="hover:text-primary transition-all duration-100" href="/home/scanner"><NavigationMenuItem>
+                  Food Scanner
+              </NavigationMenuItem></Link>
+            </NavigationMenuList>
+            <NavigationMenuList>
               <Link className="hover:text-primary transition-all duration-100" href={session ? "/api/auth/signout" : "/api/auth/signin"}><NavigationMenuItem>
                   {session ? "Sign Out" : "Sign In"}
               </NavigationMenuItem></Link>

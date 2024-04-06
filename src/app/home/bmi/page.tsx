@@ -17,14 +17,14 @@ export default function Home() {
   type Weight = "normal" | "overweight" | "obese" | "underweight"
 
   function BmiDisplay() {
-    if (weight != 0 && height != 0) {
+    if (weight > 0 && height > 0) {
         return <p>Your BMI is {bmi}. That means that you are {weightStatus}.</p>
     }
     return null;
   }
 
   return (<>
-    <main className="p-4">
+    <main className="p-4 space-y-3">
       <h1 className="text-4xl">BMI</h1>
       <Input type="number" placeholder="Height(Inches)" onChange={(e) => { setHeight(Number(e.target.value)) }}/>
       <Input type="number" placeholder="Weight(Pounds)" onChange={(e) => { setWeight(Number(e.target.value)) }}/>
