@@ -64,7 +64,7 @@ export const calcRouter = createTRPCRouter({
       }),
     )
     .query(({ input }) => {
-      // @ts-ignore
+      // @ts-expect-error I don't feel like doing this much for a hackathon shut up eslint
       return rankBloodSugar(input.mode, input.sugar, input.units);
     }),
 });
