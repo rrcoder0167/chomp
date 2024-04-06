@@ -5,7 +5,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 
-model = tf.keras.models.load_model('/Users/riddhiman.rana/Desktop/Coding/chomp/food_101_model.h5')
+model = tf.keras.models.load_model('/Users/riddhiman.rana/Desktop/Coding/chomp/food_model.keras')
 
 class_names = ['Coke', 'Doritos', 'Oranges', 'Oreos', 'Seven Up', 'Sprite']  # Define your class names
 
@@ -16,11 +16,14 @@ def predict_food(image_path):
     img_array = tf.expand_dims(img_array, 0)  # Create a batch
 
     predictions = model.predict(img_array)
-    score = tf.nn.softmax(predictions[0])
     print(predictions)
+    
+    # Get the index of the class with the highest prediction value
+    predicted_class = np.argmax(predictions[0])
+    
     print(
         "This image most likely belongs to {} with a {:.2f} percent confidence."
-        .format(class_names[np.argmax(score)], 100 * np.max(score))
+        .format(class_names[predicted_class], 100 * predictions[0][predicted_class])
     )
     
-predict_food('/Users/riddhiman.rana/Desktop/Coding/chomp/public/images/seven_up.jpeg')
+predict_food('/Users/riddhiman.rana/Desktop/Coding/chomp/public/images/cokebottle.jpg')

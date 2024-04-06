@@ -1,26 +1,44 @@
+# 1. Import necessary libraries
 import tensorflow as tf
-from tensorflow.keras.applications import MobileNetV2
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Model
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications import VGG16
 
-# Load pre-trained MobileNetV2
-base_model = MobileNetV2(weights='imagenet', include_top=False, pooling='avg')
+# 2. Load and preprocess your data
+# Assuming you have two folders 'orange' and 'coke_can' with respective images
+train_datagen = ImageDataGenerator(rescale=1./255, rotation_range=40, width_shift_range=0.2,
+                                   height_shift_range=0.2, shear_range=0.2, zoom_range=0.2,
+                                   horizontal_flip=True, fill_mode='nearest')
+train_generator = train_datagen.flow_from_directory(
+        '/Users/riddhiman.rana/Desktop/Coding/chomp/public/images/training',
+        target_size=(150, 150),
+        batch_size=20,
+        class_mode='binary')
 
-# Add a new top layer
-x = base_model.output
-predictions = Dense(5, activation='softmax')(x)  # Change from 5 to 6
-model = Model(inputs=base_model.input, outputs=predictions)
+# 3. Define your model
+conv_base = VGG16(weights='imagenet', include_top=False, input_shape=(150, 150, 3))
 
-# Compile the model
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model = Sequential()
+model.add(conv_base)
+model.add(Flatten())
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(1, activation='sigmoid'))
 
-# Prepare data
-train_datagen = ImageDataGenerator(rescale=1./255)
-train_generator = train_datagen.flow_from_directory('/Users/riddhiman.rana/Desktop/Coding/chomp/public/images', target_size=(224, 224), batch_size=32, class_mode='categorical')
+# Freeze the convolutional base
+conv_base.trainable = False
 
-# Train the model
-model.fit(train_generator, epochs=10)
+# 4. Compile your model
+model.compile(loss='binary_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])
 
-# Save the model
-model.save('./food_model.keras')
+# 5. Train your model
+history = model.fit(
+      train_generator,
+      steps_per_epoch=100,
+      epochs=30)
+
+# 6. Evaluate your model
+# Load your validation data similar to train data and use model.evaluate()
