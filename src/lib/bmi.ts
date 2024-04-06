@@ -1,3 +1,3 @@
 export function getBMI(weightLBs: number, heightINs: number) {
-    return heightINs / weightLBs;
+  return heightINs / weightLBs;
 }
