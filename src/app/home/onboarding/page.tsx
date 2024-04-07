@@ -14,16 +14,21 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "~/lib/utils";
 
+import { api } from "~/trpc/react";
+import { redirect } from "next/navigation";
+
 export default function Home() {
   const [stage, setStage] = useState(1);
   const [name, setName] = useState("");
   const [sugar, setSugar] = useState(1);
   const [date, setDate] = useState(new Date("09/25/2000"));
 
+  const form = api.onboarding.set.useMutation();
+
   switch (stage) {
     case 1:
       return (
-        <>
+        <div className="space-y-2 space-x-1 overflow-x-hidden">
           <Progress value={(stage / 5) * 100} />
           <Input
             placeholder="Full Name"
@@ -32,11 +37,11 @@ export default function Home() {
             }}
           />
           <Button onClick={() => setStage(stage + 1)}>Next</Button>
-        </>
+        </div>
       );
     case 2:
       return (
-        <>
+        <div className="space-y-2 space-x-1 overflow-x-hidden">
           <Progress value={(stage / 5) * 100} />
           <Popover>
             <PopoverTrigger asChild>
@@ -64,11 +69,11 @@ export default function Home() {
           <br />
           <Button onClick={() => setStage(stage - 1)}>Back</Button>
           <Button onClick={() => setStage(stage + 1)}>Next</Button>
-        </>
+        </div>
       );
     case 3:
       return (
-        <>
+        <div className="space-y-2 space-x-1 overflow-x-hidden">
           <Progress value={(stage / 5) * 100} />
           <Input
             placeholder="Current Blood Sugar %"
@@ -76,11 +81,11 @@ export default function Home() {
           />
           <Button onClick={() => setStage(stage - 1)}>Back</Button>
           <Button onClick={() => setStage(stage + 1)}>Next</Button>
-        </>
+        </div>
       );
     case 4:
       return (
-        <>
+        <div className="space-y-2 space-x-1 overflow-x-hidden">
           <Progress value={(stage / 5) * 100} />
           <Input
             placeholder="Target Blood Sugar %"
@@ -88,11 +93,11 @@ export default function Home() {
           />
           <Button onClick={() => setStage(stage - 1)}>Back</Button>
           <Button onClick={() => setStage(stage + 1)}>Next</Button>
-        </>
+        </div>
       );
     case 5:
       return (
-        <>
+        <div className="space-y-2 space-x-1 overflow-x-hidden">
           <Progress value={(stage / 5) * 100} />
           <Popover>
             <PopoverTrigger asChild>
@@ -119,8 +124,10 @@ export default function Home() {
           </Popover>
           <br />
           <Button onClick={() => setStage(stage - 1)}>Back</Button>
-          <Button onClick={() => null}>Done</Button>
-        </>
-      );
+          <Button onClick={() => { form.mutate({ date, name, sugar }); setStage(stage + 1) }}>Done</Button>
+        </div>
+        )
+        case 6:
+            redirect("/home");
   }
 }

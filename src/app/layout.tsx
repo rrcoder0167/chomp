@@ -11,6 +11,7 @@ import {
 } from "~/components/ui/navigation-menu";
 import Image from "next/image";
 import Link from "next/link";
+import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 import { getServerAuthSession } from "~/server/auth";
 
 const inter = Inter({
@@ -30,6 +31,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerAuthSession();
+
+  function AppAvatar() {
+    if (!session) return null;
+    return <Avatar>
+      <AvatarImage src={String(session.user.image)} />
+      <AvatarFallback>69</AvatarFallback>
+    </Avatar>
+  }
 
   return (
     <html lang="en">
@@ -72,6 +81,11 @@ export default async function RootLayout({
                   {session ? "Sign Out" : "Sign In"}
                 </NavigationMenuItem>
               </Link>
+            </NavigationMenuList>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                  <AppAvatar/>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
           {children}
