@@ -7,23 +7,18 @@ import numpy as np
 
 model = tf.keras.models.load_model('/Users/riddhiman.rana/Desktop/Coding/chomp/food_model.keras')
 
-class_names = ['Coke', 'Doritos', 'Oranges', 'Oreos', 'Seven Up', 'Sprite']  # Define your class names
+class_names = ['Coke', 'Oranges']  # Define your class names
 
-# Function to predict food from an image
 def predict_food(image_path):
-    img = tf.keras.preprocessing.image.load_img(image_path, target_size=(224, 224))
+    img = tf.keras.preprocessing.image.load_img(image_path, target_size=(150, 150))
     img_array = tf.keras.preprocessing.image.img_to_array(img)
-    img_array = tf.expand_dims(img_array, 0)  # Create a batch
+    img_array = np.expand_dims(img_array, axis=0) / 255
 
     predictions = model.predict(img_array)
-    print(predictions)
-    
-    # Get the index of the class with the highest prediction value
-    predicted_class = np.argmax(predictions[0])
-    
-    print(
-        "This image most likely belongs to {} with a {:.2f} percent confidence."
-        .format(class_names[predicted_class], 100 * predictions[0][predicted_class])
-    )
-    
-predict_food('/Users/riddhiman.rana/Desktop/Coding/chomp/public/images/cokebottle.jpg')
+    score = predictions[0]
+    class_index = np.argmax(score)
+    class_name = class_names[class_index]
+
+    print(f'Predicted class: {class_name}')
+    print(f'Confidence: {score[class_index]}')
+predict_food('/Users/riddhiman.rana/Desktop/Coding/chomp/ai/test_data/image.png')

@@ -16,7 +16,7 @@ train_datagen = ImageDataGenerator(
     horizontal_flip=True)
 
 train_generator = train_datagen.flow_from_directory(
-    'path_to_your_dataset',  # replace with your dataset path
+    '/Users/riddhiman.rana/Desktop/Coding/chomp/ai/training_data',  # replace with your dataset path
     target_size=(img_width, img_height),
     batch_size=batch_size,
     class_mode='binary')
@@ -46,7 +46,7 @@ model.compile(loss='binary_crossentropy',
 model.fit(
     train_generator,
     steps_per_epoch=train_generator.samples // batch_size,
-    epochs=10)
+    epochs=5)
 
 # Save the model
 model.save('food_model.keras')
