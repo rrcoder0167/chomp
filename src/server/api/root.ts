@@ -11,7 +11,7 @@ import { onboardingRouter } from "./routers/onboarding";
 export const appRouter = createTRPCRouter({
   ai: aiRouter,
   calc: calcRouter,
-  onboarding: onboardingRouter
+  onboarding: onboardingRouter,
 });
 
 // export type definition of API

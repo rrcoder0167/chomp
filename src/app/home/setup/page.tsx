@@ -28,7 +28,7 @@ export default function Home() {
   switch (stage) {
     case 1:
       return (
-        <div className="space-y-2 space-x-1 overflow-x-hidden">
+        <div className="space-x-1 space-y-2 overflow-x-hidden">
           <Progress value={(stage / 5) * 100} />
           <Input
             placeholder="Full Name"
@@ -41,7 +41,7 @@ export default function Home() {
       );
     case 2:
       return (
-        <div className="space-y-2 space-x-1 overflow-x-hidden">
+        <div className="space-x-1 space-y-2 overflow-x-hidden">
           <Progress value={(stage / 5) * 100} />
           <Popover>
             <PopoverTrigger asChild>
@@ -73,7 +73,7 @@ export default function Home() {
       );
     case 3:
       return (
-        <div className="space-y-2 space-x-1 overflow-x-hidden">
+        <div className="space-x-1 space-y-2 overflow-x-hidden">
           <Progress value={(stage / 5) * 100} />
           <Input
             placeholder="Current Blood Sugar %"
@@ -85,7 +85,7 @@ export default function Home() {
       );
     case 4:
       return (
-        <div className="space-y-2 space-x-1 overflow-x-hidden">
+        <div className="space-x-1 space-y-2 overflow-x-hidden">
           <Progress value={(stage / 5) * 100} />
           <Input
             placeholder="Target Blood Sugar %"
@@ -97,7 +97,7 @@ export default function Home() {
       );
     case 5:
       return (
-        <div className="space-y-2 space-x-1 overflow-x-hidden">
+        <div className="space-x-1 space-y-2 overflow-x-hidden">
           <Progress value={(stage / 5) * 100} />
           <Popover>
             <PopoverTrigger asChild>
@@ -124,7 +124,14 @@ export default function Home() {
           </Popover>
           <br />
           <Button onClick={() => setStage(stage - 1)}>Back</Button>
-          <Button onClick={() => { form.mutate({ date, name, sugar }); redirect("/home"); }}>Done</Button>
+          <Button
+            onClick={() => {
+              form.mutate({ date, name, sugar });
+              redirect("/home");
+            }}
+          >
+            Done
+          </Button>
         </div>
       );
   }

@@ -34,10 +34,12 @@ export default async function RootLayout({
 
   function AppAvatar() {
     if (!session) return null;
-    return <Avatar>
-      <AvatarImage src={String(session.user.image)} />
-      <AvatarFallback>69</AvatarFallback>
-    </Avatar>
+    return (
+      <Avatar>
+        <AvatarImage src={String(session.user.image)} />
+        <AvatarFallback>69</AvatarFallback>
+      </Avatar>
+    );
   }
 
   return (
@@ -90,9 +92,9 @@ export default async function RootLayout({
                 </NavigationMenuItem>
               </Link>
             </NavigationMenuList>
-            <NavigationMenuList className="text-right float-right ml-auto">
+            <NavigationMenuList className="float-right ml-auto text-right">
               <NavigationMenuItem>
-                  <AppAvatar/>
+                <AppAvatar />
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
