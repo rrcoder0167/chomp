@@ -3,7 +3,7 @@ import pytesseract
 import cv2
 
 # Load the image from a file
-image = cv2.imread('/Users/riddhiman.rana/Desktop/Coding/chomp/ai/test_data/coke.jpeg')
+image = cv2.imread('/Users/riddhiman.rana/Desktop/Coding/chomp/ai/test_data/dorito_nutrition.jpeg')
 
 # Convert the image to gray scale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
