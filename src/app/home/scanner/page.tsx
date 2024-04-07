@@ -1,65 +1,45 @@
 "use client";
-import { redirect } from "next/navigation";
-import { useRef, useState, useEffect } from "react";
-import Webcam from "react-webcam";
-import { Button } from "~/components/ui/button";
-const taps = ["Sprite", "Coke", "Welches Fruit Snacks", "Squirt"];
+import { useState } from 'react';
+import { UploadButton } from "~/utils/uploadthing";
 
-export default function Page() {
-    const [tap,setTap] = useState(0);
+export default function Home() {
+  const [fileUrl, setFileUrl] = useState(null);
+  const [totalSugars, setTotalSugars] = useState(null);
 
-    const webcamRef = useRef(null);
-    const [isWebcamOn, setIsWebcamOn] = useState(false);
-    const [imageSrc, setImageSrc] = useState(null);
-    const [devices, setDevices] = useState([]);
-    const [selectedDeviceId, setSelectedDeviceId] = useState("");
-    const [showModal, setShowModal] = useState(false); // New state for modal
-    const [showConclusion, setShowConclusion] = useState(false);
+  const fetchTotalSugars = async (url: any) => {
+    try {
+      const res = await fetch(`/api/textrecognition/${encodeURIComponent(url)}`);
+      const data = await res.json();
+      setTotalSugars(data.totalSugars);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
-    useEffect(() => {
-        navigator.mediaDevices.enumerateDevices().then((mediaDevices) => {
-            // @ts-expect-error
-            setDevices(mediaDevices.filter(({ kind }) => kind === "videoinput"));
-        });
-    }, []);
-
-    const toggleWebcam = () => {
-        setIsWebcamOn(!isWebcamOn);
-    };
-
-    const captureImage = () => {
-        // @ts-expect-error
-        const imageSrc = webcamRef.current.getScreenshot();
-        setImageSrc(imageSrc);
-        setShowModal(true); // Show modal after capturing image
-        setShowConclusion(true);
-    };
-
-    return (
-        <div className="flex flex-col items-center space-x-2 space-y-2">
-            {isWebcamOn && (
-                <Webcam
-                    ref={webcamRef}
-                    screenshotFormat="image/png"
-                    muted={true}
-                    videoConstraints={{ deviceId: selectedDeviceId }}
-                    className="w-640 h-480 rounded-lg shadow-lg"
-                />
-            )}
-            <Button
-                onClick={toggleWebcam}
-            >
-                {isWebcamOn ? "Turn Off Webcam" : "Turn On Webcam"}
-            </Button>
-            {isWebcamOn && (
-                <Button
-                    onClick={captureImage}
-                >
-                    Capture Image
-                </Button>
-            )}
-            <Button onClick={() => setTap(tap+1)}></Button>
-            <p>{showConclusion ? `The food is a ${taps[tap-1]}. You should try to avoid this food if possible.` : ""}</p>
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <UploadButton
+        endpoint="imageUploader"
+        onClientUploadComplete={(res: any) => {
+          // Do something with the response
+          console.log("Files: ", res);
+          if (res && res[0] && res[0].url) {
+            setFileUrl(res[0].url);
+            fetchTotalSugars(res[0].url);
+          }
+          console.log(fileUrl);
+        }}
+        onUploadError={(error: Error) => {
+          // Do something with the error.
+          alert(`ERROR! ${error.message}`);
+        }}
+      />
+      {totalSugars && (
+        <div>
+          <p className="text-white">Total Sugars: {totalSugars}</p>
         </div>
-    );
+      )}
+    </main>
+  );
 }
+
