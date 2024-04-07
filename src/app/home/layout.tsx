@@ -25,15 +25,13 @@ export default async function RootLayout({
   const session = await getServerAuthSession();
 
   if (!session) {
-    redirect("/api/auth/signin")
+    redirect("/api/auth/signin");
   }
 
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider>
-          {children}
-        </TRPCReactProvider>
+        <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
     </html>
   );

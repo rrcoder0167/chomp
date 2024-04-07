@@ -8,9 +8,9 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "~/components/ui/navigation-menu"
-import Image from "next/image"
-import Link from "next/link"
+} from "~/components/ui/navigation-menu";
+import Image from "next/image";
+import Link from "next/link";
 import { getServerAuthSession } from "~/server/auth";
 
 const inter = Inter({
@@ -36,26 +36,42 @@ export default async function RootLayout({
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider>
           <NavigationMenu className="space-x-4 p-2">
-            <NavigationMenuLink><Image src="/logo.png" alt="Pacman" width="25" height="25"/></NavigationMenuLink>
+            <NavigationMenuLink>
+              <Image src="/logo.png" alt="Pacman" width="25" height="25" />
+            </NavigationMenuLink>
             <NavigationMenuList>
-              <Link className="hover:text-primary transition-all duration-100" href="/home/bmi"><NavigationMenuItem>
-                  BMI Calculator
-              </NavigationMenuItem></Link>
+              <Link
+                className="transition-all duration-100 hover:text-primary"
+                href="/home/bmi"
+              >
+                <NavigationMenuItem>BMI Calculator</NavigationMenuItem>
+              </Link>
             </NavigationMenuList>
             <NavigationMenuList>
-              <Link className="hover:text-primary transition-all duration-100" href="/home/sugar"><NavigationMenuItem>
-                  Blood Sugar
-              </NavigationMenuItem></Link>
+              <Link
+                className="transition-all duration-100 hover:text-primary"
+                href="/home/sugar"
+              >
+                <NavigationMenuItem>Blood Sugar</NavigationMenuItem>
+              </Link>
             </NavigationMenuList>
             <NavigationMenuList>
-              <Link className="hover:text-primary transition-all duration-100" href="/home/scanner"><NavigationMenuItem>
-                  Food Scanner
-              </NavigationMenuItem></Link>
+              <Link
+                className="transition-all duration-100 hover:text-primary"
+                href="/home/scanner"
+              >
+                <NavigationMenuItem>Food Scanner</NavigationMenuItem>
+              </Link>
             </NavigationMenuList>
             <NavigationMenuList>
-              <Link className="hover:text-primary transition-all duration-100" href={session ? "/api/auth/signout" : "/api/auth/signin"}><NavigationMenuItem>
+              <Link
+                className="transition-all duration-100 hover:text-primary"
+                href={session ? "/api/auth/signout" : "/api/auth/signin"}
+              >
+                <NavigationMenuItem>
                   {session ? "Sign Out" : "Sign In"}
-              </NavigationMenuItem></Link>
+                </NavigationMenuItem>
+              </Link>
             </NavigationMenuList>
           </NavigationMenu>
           {children}
