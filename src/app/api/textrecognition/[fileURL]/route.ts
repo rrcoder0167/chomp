@@ -14,7 +14,7 @@ function runPythonScript(url: string) {
   });
 }
 
-export async function GET(req, { params }) {
+export async function GET(req: any, { params }: any) {
   const { fileURL } = params;
   try {
     const totalSugars = await runPythonScript(fileURL);
