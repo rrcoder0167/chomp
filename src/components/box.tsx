@@ -10,7 +10,7 @@ export const drawRect = (detections, ctx) => {
 
         // Set styling
         ctx.strokeStyle = color;
-        ctx.font = '18px Arial';
+        ctx.font = '18px Inter';
 
         // Draw rectangles and text
         ctx.beginPath();

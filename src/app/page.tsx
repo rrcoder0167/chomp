@@ -1,70 +1,95 @@
 "use client";
-import { useRef, useEffect } from "react";
-import * as tf from "@tensorflow/tfjs";
-import * as cocossd from "@tensorflow-models/coco-ssd";
+import { useRef, useState, useEffect } from "react";
 import Webcam from "react-webcam";
-import { drawRect } from "../components/box";
 
 export default function Page() {
     const webcamRef = useRef(null);
-    const canvasRef = useRef(null);
-
-    // Main function
-    const runCoco = async () => {
-        await tf.setBackend('webgl'); // Set the backend to WebGL
-        const net = await cocossd.load();
-        console.log("Handpose model loaded.");
-        //  Loop and detect hands
-        setInterval(() => {
-            detect(net);
-        }, 10);
-    };
-
-    const detect = async (net) => {
-        // Check data is available
-        if (
-            typeof webcamRef.current !== "undefined" &&
-            webcamRef.current !== null &&
-            webcamRef.current.video.readyState === 4
-        ) {
-            // Get Video Properties
-            const video = webcamRef.current.video;
-            const videoWidth = webcamRef.current.video.videoWidth;
-            const videoHeight = webcamRef.current.video.videoHeight;
-
-            // Set video width
-            webcamRef.current.video.width = videoWidth;
-            webcamRef.current.video.height = videoHeight;
-
-            // Set canvas height and width
-            canvasRef.current.width = videoWidth;
-            canvasRef.current.height = videoHeight;
-
-            // Make Detections
-            const obj = await net.detect(video);
-            console.log(obj);
-
-            // Draw mesh
-            const ctx = canvasRef.current.getContext("2d");
-            drawRect(obj, ctx);  
-        }
-    };
+    const [isWebcamOn, setIsWebcamOn] = useState(false);
+    const [imageSrc, setImageSrc] = useState(null);
+    const [devices, setDevices] = useState([]);
+    const [selectedDeviceId, setSelectedDeviceId] = useState("");
+    const [showModal, setShowModal] = useState(false); // New state for modal
 
     useEffect(() => {
-        runCoco();
+        navigator.mediaDevices.enumerateDevices().then((mediaDevices) => {
+            setDevices(mediaDevices.filter(({ kind }) => kind === "videoinput"));
+        });
     }, []);
 
+    const toggleWebcam = () => {
+        setIsWebcamOn(!isWebcamOn);
+    };
+
+    const captureImage = () => {
+        const imageSrc = webcamRef.current.getScreenshot();
+        setImageSrc(imageSrc);
+        setShowModal(true); // Show modal after capturing image
+    };
+
+    const handleDeviceChange = (event) => {
+        setSelectedDeviceId(event.target.value);
+    };
+
+    const handleConfirm = () => {
+        setShowModal(false); // Hide modal and keep image
+    };
+
+    const handleCancel = () => {
+        setImageSrc(null); // Discard image
+        setShowModal(false); // Hide modal
+    };
+
     return (
-        <div>
-            <Webcam
-                ref={webcamRef}
-                muted={true}
-                style={{ position: "absolute", marginLeft: "auto", marginRight: "auto", left: 0, right: 0, textAlign: "center", zIndex: 9, width: 640, height: 480 }}
-            />
-            <canvas
-                ref={canvasRef}
-                style={{ position: "absolute", marginLeft: "auto", marginRight: "auto", left: 0, right: 0, textAlign: "center", zIndex: 9, width: 640, height: 480 }}
-            />
+        <div className="flex flex-col items-center">
+            {isWebcamOn && (
+                <Webcam
+                    ref={webcamRef}
+                    screenshotFormat="image/png"
+                    muted={true}
+                    videoConstraints={{ deviceId: selectedDeviceId }}
+                    className="w-640 h-480 rounded-lg shadow-lg"
+                />
+            )}
+            <button
+                onClick={toggleWebcam}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 transition duration-300 ease-in-out transform hover:scale-110"
+            >
+                {isWebcamOn ? "Turn Off Webcam" : "Turn On Webcam"}
+            </button>
+            {isWebcamOn && (
+                <button
+                    onClick={captureImage}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 transition duration-300 ease-in-out transform hover:scale-110"
+                >
+                    Capture Image
+                </button>
+            )}
+            <select
+                onChange={handleDeviceChange}
+                className="mt-4 p-2 border border-gray-300 rounded cursor-pointer hover:bg-gray-200"
+            >
+                {devices.map((device, index) => (
+                    <option key={index} value={device.deviceId}>
+                        {device.label || `Device ${index + 1}`}
+                    </option>
+                ))}
+            </select>
+            {showModal && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-4 rounded shadow-lg">
+                        <h2 className="mb-4">Is this the image you want?</h2>
+                        <img src={imageSrc} alt="Captured" className="mb-4" />
+                        <div className="flex justify-end">
+                            <button onClick={handleCancel} className="mr-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                No
+                            </button>
+                            <button onClick={handleConfirm} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                Yes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
