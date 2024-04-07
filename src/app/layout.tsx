@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 import { Inter } from "next/font/google";
+import NextTopLoader from 'nextjs-toploader';
 import { TRPCReactProvider } from "~/trpc/react";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "~/components/ui/navigation-menu";
 import Image from "next/image";
@@ -48,7 +49,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider>
-          <div className="flex space-x-4 p-2">
+        <NextTopLoader color="#cba6f7"/>
+          <div className="flex justify-center space-x-4 p-2 mt-4"> {/* Added mt-4 for top margin */}
             <Link href="/home">
               <img src="/logo.png" alt="Pacman" className="w-6 h-6" />
             </Link>
@@ -63,7 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             ))}
             <Link
               href={session ? "/api/auth/signout" : "/api/auth/signin"}
-              className="text-ctp-red hover:font-bold transition-all duration-300 bg-ctp-"
+              className="text-ctp-red hover:font-bold transition-all duration-300"
             >
               {session ? "Sign Out" : "Sign In"}
             </Link>
