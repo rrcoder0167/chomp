@@ -1,14 +1,7 @@
 import "~/styles/globals.css";
-
 import { Inter } from "next/font/google";
-
 import { TRPCReactProvider } from "~/trpc/react";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "~/components/ui/navigation-menu";
+import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "~/components/ui/navigation-menu";
 import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
@@ -25,11 +18,20 @@ export const metadata = {
   icons: [{ url: "/logo.png" }],
 };
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const NavigationLink = ({ href, children }) => (
+  <Link className="transition-all duration-100 hover:text-primary" href={href}>
+    <NavigationMenuItem>{children}</NavigationMenuItem>
+  </Link>
+);
+
+const navigationItems = [
+  { href: "/home/bmi", label: "BMI Calculator" },
+  { href: "/home/foods", label: "Past Foods" },
+  { href: "/home/scanner", label: "Food Scanner" },
+  { href: "/home/setup", label: "Setup" },
+];
+
+export default async function RootLayout({ children }: { children: React.ReactNode; }) {
   const session = await getServerAuthSession();
 
   function AppAvatar() {
@@ -46,58 +48,29 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider>
-          <NavigationMenu className="space-x-4 p-2">
+          <div className="flex space-x-4 p-2">
             <Link href="/home">
-                  <Image src="/logo.png" alt="Pacman" width="25" height="25" />
+              <img src="/logo.png" alt="Pacman" className="w-6 h-6" />
             </Link>
-            <NavigationMenuList>
+            {navigationItems.map((item) => (
               <Link
-                className="transition-all duration-100 hover:text-primary"
-                href="/home/bmi"
+                key={item.href}
+                href={item.href}
+                className="text-ctp-text hover:text-ctp-blue hover:font-bold transition-all duration-300"
               >
-                <NavigationMenuItem>BMI Calculator</NavigationMenuItem>
+                {item.label}
               </Link>
-            </NavigationMenuList>
-            <NavigationMenuList>
-              <Link
-                className="transition-all duration-100 hover:text-primary"
-                href="/home/foods"
-              >
-                <NavigationMenuItem>Past Foods</NavigationMenuItem>
-              </Link>
-            </NavigationMenuList>
-            <NavigationMenuList>
-              <Link
-                className="transition-all duration-100 hover:text-primary"
-                href="/home/scanner"
-              >
-                <NavigationMenuItem>Food Scanner</NavigationMenuItem>
-              </Link>
-            </NavigationMenuList>
-            <NavigationMenuList>
-              <Link
-                className="transition-all duration-100 hover:text-primary"
-                href="/home/setup"
-              >
-                <NavigationMenuItem>Setup</NavigationMenuItem>
-              </Link>
-            </NavigationMenuList>
-            <NavigationMenuList>
-              <Link
-                className="transition-all duration-100 hover:text-primary"
-                href={session ? "/api/auth/signout" : "/api/auth/signin"}
-              >
-                <NavigationMenuItem>
-                  {session ? "Sign Out" : "Sign In"}
-                </NavigationMenuItem>
-              </Link>
-            </NavigationMenuList>
-            <NavigationMenuList className="float-right ml-auto text-right">
-              <NavigationMenuItem>
-                <AppAvatar />
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+            ))}
+            <Link
+              href={session ? "/api/auth/signout" : "/api/auth/signin"}
+              className="text-ctp-red hover:font-bold transition-all duration-300 bg-ctp-"
+            >
+              {session ? "Sign Out" : "Sign In"}
+            </Link>
+            <div>
+              <AppAvatar />
+            </div>
+          </div>
           {children}
         </TRPCReactProvider>
       </body>
