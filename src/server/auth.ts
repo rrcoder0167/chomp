@@ -21,8 +21,8 @@ declare module "next-auth" {
     user: {
       id: string;
       hasBeenOnBoarded: boolean;
-      // ...other properties
-      // role: UserRole;
+      full_name: string;
+      sugar_percentage: number;
     } & DefaultSession["user"];
   }
 
