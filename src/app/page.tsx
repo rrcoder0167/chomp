@@ -31,7 +31,14 @@ export default function Page() {
     };
 
     const handleConfirm = () => {
-        setShowModal(false); // Hide modal and keep image
+        const link = document.createElement('a');
+        link.href = imageSrc;
+        link.download = 'captured_image.png'; // or any other name you want
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setShowModal(false); // Hide modal
+        window.location.href = '/testing'; // Redirect the user to /testing
     };
 
     const handleCancel = () => {
