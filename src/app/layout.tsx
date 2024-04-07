@@ -28,7 +28,7 @@ const NavigationLink = ({ href, children }) => (
 const navigationItems = [
   { href: "/home/bmi", label: "BMI Calculator" },
   { href: "/home/foods", label: "Past Foods" },
-  { href: "/home/scanner", label: "Food Scanner" },
+  { href: "/home/camera", label: "Food Scanner" },
   { href: "/home/setup", label: "Setup" },
 ];
 

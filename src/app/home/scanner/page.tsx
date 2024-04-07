@@ -20,7 +20,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <UploadButton
         endpoint="imageUploader"
-        onClientUploadComplete={(res: any) => {
+        onClientUploadComplete={(res) => {
           // Do something with the response
           console.log("Files: ", res);
           if (res && res[0] && res[0].url) {
@@ -28,12 +28,18 @@ export default function Home() {
             fetchTotalSugars(res[0].url);
           }
           console.log(fileUrl);
+          alert("Upload Completed");
         }}
         onUploadError={(error: Error) => {
           // Do something with the error.
           alert(`ERROR! ${error.message}`);
         }}
       />
+      {fileUrl && (
+        <div>
+          <img className="rounded-lg" src={fileUrl} alt="Uploaded file" />
+        </div>
+      )}
       {totalSugars && (
         <div>
           <p className="text-white">Total Sugars: {totalSugars}</p>
