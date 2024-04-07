@@ -47,9 +47,9 @@ export default async function RootLayout({
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider>
           <NavigationMenu className="space-x-4 p-2">
-            <NavigationMenuLink>
-              <Image src="/logo.png" alt="Pacman" width="25" height="25" />
-            </NavigationMenuLink>
+            <Link href="/home">
+                  <Image src="/logo.png" alt="Pacman" width="25" height="25" />
+            </Link>
             <NavigationMenuList>
               <Link
                 className="transition-all duration-100 hover:text-primary"
@@ -61,9 +61,9 @@ export default async function RootLayout({
             <NavigationMenuList>
               <Link
                 className="transition-all duration-100 hover:text-primary"
-                href="/home/sugar"
+                href="/home/foods"
               >
-                <NavigationMenuItem>Blood Sugar</NavigationMenuItem>
+                <NavigationMenuItem>Past Foods</NavigationMenuItem>
               </Link>
             </NavigationMenuList>
             <NavigationMenuList>

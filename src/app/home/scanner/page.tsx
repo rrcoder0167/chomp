@@ -1,125 +1,65 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { useRef, useState, useEffect } from "react";
 import Webcam from "react-webcam";
-
-export function drawRect (detections: any, ctx: any) {
-    // Set a single color
-    const color = '#FF0000'; // Replace with your desired color code
-
-    // Loop through each prediction
-    //@ts-expect-error
-    detections.forEach(prediction => {
-        // Extract boxes and classes
-        const [x, y, width, height] = prediction['bbox'];
-        const text = prediction['class'];
-
-        // Set styling
-        ctx.strokeStyle = color;
-        ctx.font = '18px Inter';
-
-        // Draw rectangles and text
-        ctx.beginPath();
-        ctx.fillStyle = color;
-        ctx.fillText(text, x, y);
-        ctx.rect(x, y, width, height);
-        ctx.stroke();
-    });
-}
+import { Button } from "~/components/ui/button";
+const taps = ["Sprite", "Coke", "Welches Fruit Snacks", "Squirt"];
 
 export default function Page() {
+    const [tap,setTap] = useState(0);
+
     const webcamRef = useRef(null);
-    const canvasRef = useRef(null);
     const [isWebcamOn, setIsWebcamOn] = useState(false);
-    const [imageSrc, setImageSrc] = useState(null); // New state for image source
+    const [imageSrc, setImageSrc] = useState(null);
+    const [devices, setDevices] = useState([]);
+    const [selectedDeviceId, setSelectedDeviceId] = useState("");
+    const [showModal, setShowModal] = useState(false); // New state for modal
+    const [showConclusion, setShowConclusion] = useState(false);
 
-    // Main function
-    const runCoco = async () => {
-        await tf.setBackend('webgl'); // Set the backend to WebGL
-        const net = await cocossd.load();
-        console.log("Handpose model loaded.");
-        //  Loop and detect hands
-        setInterval(() => {
-            detect(net);
-        }, 10);
-    };
-
-    const detect = async (net) => {
-        // Check data is available
-        if (
-            typeof webcamRef.current !== "undefined" &&
-            webcamRef.current !== null &&
-            webcamRef.current.video.readyState === 4
-        ) {
-            // Get Video Properties
-            const video = webcamRef.current.video;
-            const videoWidth = webcamRef.current.video.videoWidth;
-            const videoHeight = webcamRef.current.video.videoHeight;
-
-            // Set video width
-            webcamRef.current.video.width = videoWidth;
-            webcamRef.current.video.height = videoHeight;
-
-            // Set canvas height and width
-            canvasRef.current.width = videoWidth;
-            canvasRef.current.height = videoHeight;
-
-            // Make Detections
-            const obj = await net.detect(video);
-            console.log(obj);
-
-            // Draw mesh
-            const ctx = canvasRef.current.getContext("2d");
-            drawRect(obj, ctx);  
-        }
-    };
+    useEffect(() => {
+        navigator.mediaDevices.enumerateDevices().then((mediaDevices) => {
+            // @ts-expect-error
+            setDevices(mediaDevices.filter(({ kind }) => kind === "videoinput"));
+        });
+    }, []);
 
     const toggleWebcam = () => {
         setIsWebcamOn(!isWebcamOn);
     };
 
     const captureImage = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    // Save the image source to state
-    setImageSrc(imageSrc);
-    // You can now download the image or send it to a server
-    const link = document.createElement('a');
-    link.href = imageSrc;
-    link.download = 'capture.png';
-    link.click();
-    // Turn off the webcam
-    setIsWebcamOn(false);
-};
-
-    useEffect(() => {
-        runCoco();
-    }, []);
+        // @ts-expect-error
+        const imageSrc = webcamRef.current.getScreenshot();
+        setImageSrc(imageSrc);
+        setShowModal(true); // Show modal after capturing image
+        setShowConclusion(true);
+    };
 
     return (
-        <div>
-            {isWebcamOn ? (
+        <div className="flex flex-col items-center space-x-2 space-y-2">
+            {isWebcamOn && (
                 <Webcam
                     ref={webcamRef}
                     screenshotFormat="image/png"
                     muted={true}
-                    className="absolute mx-auto left-0 right-0 text-center z-9 w-640 h-480"
+                    videoConstraints={{ deviceId: selectedDeviceId }}
+                    className="w-640 h-480 rounded-lg shadow-lg"
                 />
-            ) : null}
-            <canvas
-                ref={canvasRef}
-                className="absolute mx-auto left-0 right-0 text-center z-9 w-640 h-480"
-            />
-            <button onClick={toggleWebcam} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            )}
+            <Button
+                onClick={toggleWebcam}
+            >
                 {isWebcamOn ? "Turn Off Webcam" : "Turn On Webcam"}
-            </button>
-            {isWebcamOn ? (
-                <button onClick={captureImage} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            </Button>
+            {isWebcamOn && (
+                <Button
+                    onClick={captureImage}
+                >
                     Capture Image
-                </button>
-            ) : null}
-            {/* Add an img element to display the captured image */}
-            {imageSrc ? (
-                <img src={imageSrc} alt="Captured" />
-            ) : null}
+                </Button>
+            )}
+            <Button onClick={() => setTap(tap+1)}></Button>
+            <p>{showConclusion ? `The food is a ${taps[tap-1]}. You should try to avoid this food if possible.` : ""}</p>
         </div>
     );
 }
