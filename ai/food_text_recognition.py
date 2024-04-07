@@ -4,17 +4,15 @@ import cv2
 import re
 
 # Load the image from a file
-image = cv2.imread('/Users/riddhiman.rana/Desktop/Coding/chomp/ai/test_data/cheetoh stuff.jpeg')
+image = cv2.imread('/Users/riddhiman.rana/Desktop/Coding/chomp/ai/test_data/seven_up.jpeg')
 
 # Convert the image to gray scale
-#gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # Use Tesseract to do OCR on the image
-text = pytesseract.image_to_string(image)
+text = pytesseract.image_to_string(gray)
 
 # Print the text
-print(text)
-
 def search_total_sugars(text):
     # Search for the pattern "Total Sugars {anything here}\n"
     pattern = r"Total Sugars (.*?)\n"
