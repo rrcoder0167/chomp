@@ -24,7 +24,6 @@ export default function Home() {
   const [date, setDate] = useState(new Date("09/25/2000"));
 
   const form = api.onboarding.set.useMutation();
-  const isOnboarded = api.onboarding.onboardedBefore.useQuery();
 
   switch (stage) {
     case 1:
@@ -61,7 +60,7 @@ export default function Home() {
               <Calendar
                 mode="single"
                 selected={date}
-                // @ts-ignore
+                // @ts-expect-error
                 onSelect={setDate}
                 initialFocus
               />
@@ -117,7 +116,7 @@ export default function Home() {
               <Calendar
                 mode="single"
                 selected={date}
-                // @ts-ignore
+                // @ts-expect-error
                 onSelect={setDate}
                 initialFocus
               />
