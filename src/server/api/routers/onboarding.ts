@@ -14,9 +14,19 @@ export const onboardingRouter = createTRPCRouter({
         data: {
             birthday: input.date,
             sugar_percentage: input.sugar,
-            full_name: input.name
+            full_name: input.name,
+            hasBeenOnboarded: true
         }
       })
       return "OK";
-  })
+  }),
+  onboardedBefore: protectedProcedure
+    .query(async ({ ctx }) => {
+        const user = await ctx.db.user.findUnique({
+            where: {
+                id: String(ctx.session.user.id)
+            }
+        })
+        return user?.hasBeenOnboarded;
+    })
 });

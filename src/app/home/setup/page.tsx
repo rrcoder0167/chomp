@@ -24,6 +24,7 @@ export default function Home() {
   const [date, setDate] = useState(new Date("09/25/2000"));
 
   const form = api.onboarding.set.useMutation();
+  const isOnboarded = api.onboarding.onboardedBefore.useQuery();
 
   switch (stage) {
     case 1:
@@ -124,10 +125,8 @@ export default function Home() {
           </Popover>
           <br />
           <Button onClick={() => setStage(stage - 1)}>Back</Button>
-          <Button onClick={() => { form.mutate({ date, name, sugar }); setStage(stage + 1) }}>Done</Button>
+          <Button onClick={() => { form.mutate({ date, name, sugar }); redirect("/home"); }}>Done</Button>
         </div>
-        )
-        case 6:
-            redirect("/home");
+      );
   }
 }

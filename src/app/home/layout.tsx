@@ -1,6 +1,4 @@
 import "~/styles/globals.css";
-import { redirect } from "next/navigation";
-import { getServerAuthSession } from "~/server/auth";
 
 import { Inter } from "next/font/google";
 
@@ -22,11 +20,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerAuthSession();
-
-  if (!session) {
-    redirect("/api/auth/signin");
-  }
 
   return (
     <html lang="en">

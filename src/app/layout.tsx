@@ -75,6 +75,14 @@ export default async function RootLayout({
             <NavigationMenuList>
               <Link
                 className="transition-all duration-100 hover:text-primary"
+                href="/home/setup"
+              >
+                <NavigationMenuItem>Setup</NavigationMenuItem>
+              </Link>
+            </NavigationMenuList>
+            <NavigationMenuList>
+              <Link
+                className="transition-all duration-100 hover:text-primary"
                 href={session ? "/api/auth/signout" : "/api/auth/signin"}
               >
                 <NavigationMenuItem>
@@ -82,7 +90,7 @@ export default async function RootLayout({
                 </NavigationMenuItem>
               </Link>
             </NavigationMenuList>
-            <NavigationMenuList>
+            <NavigationMenuList className="text-right float-right ml-auto">
               <NavigationMenuItem>
                   <AppAvatar/>
               </NavigationMenuItem>
