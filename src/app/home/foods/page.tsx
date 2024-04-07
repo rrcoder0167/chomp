@@ -62,6 +62,13 @@ const data: FoodList[] = [
     servingSize: "1 Can",
     date: "Today 6:37 PM"
   },
+  {
+    name: "7 Up",
+    score: 3,
+    sugar: 38,
+    servingSize: "1 Can",
+    date: "Today 8:39 PM"
+  },
 ]
 
 export type FoodList = {
