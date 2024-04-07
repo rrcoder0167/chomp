@@ -2,6 +2,7 @@
 import { useRef, useState, useEffect } from "react";
 import Webcam from "react-webcam";
 
+
 export default function Page() {
     const webcamRef = useRef(null);
     const [isWebcamOn, setIsWebcamOn] = useState(false);
@@ -47,7 +48,7 @@ export default function Page() {
     };
 
     return (
-        <div className="r">
+        <div className="flex flex-col items-center justify-center">
             {isWebcamOn && (
                 <Webcam
                     ref={webcamRef}
@@ -59,21 +60,21 @@ export default function Page() {
             )}
             <button
                 onClick={toggleWebcam}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 transition duration-300 ease-in-out transform hover:scale-110"
+                className="bg-ctp-blue hover:bg-ctp-mauve text-ctp-base font-bold py-2 px-4 rounded-xl mt-4 transition-all duration-300 ease-in-out hover:scale-105"
             >
-                {isWebcamOn ? "Turn Off Webcam" : "Turn On Webcam"}
+                {isWebcamOn ? "Turn Off Camera" : "Turn On Camera"}
             </button>
             {isWebcamOn && (
                 <button
                     onClick={captureImage}
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 transition duration-300 ease-in-out transform hover:scale-110"
+                    className="bg-ctp-green hover:bg-ctp-teal text-ctp-base font-bold py-2 px-4 rounded-xl mt-4 transition duration-300 ease-in-out transform hover:scale-110"
                 >
                     Capture Image
                 </button>
             )}
             <select
                 onChange={handleDeviceChange}
-                className="mt-4 p-2 border border-gray-300 rounded cursor-pointer hover:bg-gray-200"
+                className="mt-4 p-2 border bg-ctp-surface0 rounded-xl text-ctp-text cursor-pointer hover:bg-ctp-surface1"
             >
                 {devices.map((device, index) => (
                     <option key={index} value={device.deviceId}>
@@ -83,14 +84,14 @@ export default function Page() {
             </select>
             {showModal && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-4 rounded shadow-lg">
-                        <h2 className="mb-4">Is this the image you want?</h2>
-                        <img src={imageSrc} alt="Captured" className="mb-4" />
+                    <div className="bg-ctp-surface0 p-4 rounded-xl shadow-lg">
+                        <h2 className="text-ctp-text mb-4">Is this the image you want?</h2>
+                        <img src={imageSrc} alt="Captured" className="mb-4 rounded-xl" />
                         <div className="flex justify-end">
-                            <button onClick={handleCancel} className="mr-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            <button onClick={handleCancel} className="mr-2 bg-ctp-red text-ctp-surface0 font-bold py-2 px-4 rounded transition-all transform hover:scale-105">
                                 No
                             </button>
-                            <button onClick={handleConfirm} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                            <button onClick={handleConfirm} className="bg-ctp-green text-ctp-surface0 font-bold py-2 px-4 rounded transition-all transform hover:scale-105">
                                 Yes
                             </button>
                         </div>
